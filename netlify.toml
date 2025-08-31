@@ -1,0 +1,36 @@
+[build]
+  # Build command for the application
+  command = "npm install"
+  # Directory to publish (for static files)
+  publish = "frontend"
+
+[functions]
+  # Directory for serverless functions
+  directory = "netlify/functions"
+
+# Redirect all API routes to serverless functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Serve the main app
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables (will be set in Netlify UI)
+[build.environment]
+  NODE_VERSION = "18"
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"

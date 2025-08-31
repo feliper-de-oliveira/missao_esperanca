@@ -1,0 +1,86 @@
+service: quero-conhecer-jesus
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    ARTEFATOS_TABLE: ${self:service}-artefatos-${self:provider.stage}
+    LOGS_TABLE: ${self:service}-logs-${self:provider.stage}
+    JWT_SECRET: ${env:JWT_SECRET}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ARTEFATOS_TABLE}"
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.LOGS_TABLE}"
+
+functions:
+  handleAuth:
+    handler: handlers/auth.handler
+    events:
+      - http:
+          path: /auth/{tokenId}
+          method: get
+          cors: true
+
+  handleContent:
+    handler: handlers/content.handler
+    events:
+      - http:
+          path: /content
+          method: post
+          cors: true
+
+  saveProgress:
+    handler: handlers/progress.handler
+    events:
+      - http:
+          path: /progress
+          method: post
+          cors: true
+
+  handlePanic:
+    handler: handlers/panic.handler
+    events:
+      - http:
+          path: /panic
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    ArtefatosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.ARTEFATOS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: tokenId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: tokenId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    LogsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.LOGS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST

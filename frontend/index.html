@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>القرآن الكريم - البحث</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Logo and Search Section -->
+        <section class="search-section">
+            <div class="logo">
+                <h1>القرآن الكريم</h1>
+                <p class="subtitle">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="ابحث في القرآن الكريم..." class="search-input">
+            </div>
+            
+        </section>
+
+        <!-- Search Results Section -->
+        <section id="searchResults" class="search-results-section hidden">
+            <div id="resultsContainer" class="results-container">
+                <!-- Search results will be populated here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Hidden Bible Modal -->
+    <div id="bibleModal" class="modal hidden">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <img src="bible-icon.svg" alt="Bíblia" class="bible-icon">
+                    <h2>Bíblia Sagrada</h2>
+                </div>
+                <div class="modal-controls">
+                    <button id="closeBibleBtn" class="control-btn">✕</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bible-navigation">
+                    <select id="chapterSelect">
+                        <option value="">Capítulo...</option>
+                    </select>
+                    <select id="bookSelect">
+                        <option value="">Selecione um livro...</option>
+                    </select>
+                </div>
+                <div class="bible-content" id="bibleContent">
+                    <div class="loading">Carregando conteúdo...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="quran-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
